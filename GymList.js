@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { signOutUser } from './services/authService';
+import { useAuth } from './contexts/AuthContext';
 
 const { width } = Dimensions.get('window');
 
 export default function GymList() {
   const navigation = useNavigation();
+  const { user, isAuthenticated, isAdmin } = useAuth();
+  
   const [gyms, setGyms] = useState([
     { 
       id: 1, 
@@ -68,6 +72,14 @@ export default function GymList() {
   );
 
   const addGym = () => {
+    if (!isAdmin) {
+      Alert.alert(
+        "Permission denied",
+        "Only admins can modify gyms."
+      );
+      return;
+    }
+
     if (newGymName && newGymLocation) {
       setGyms([
         ...gyms,
@@ -106,6 +118,14 @@ export default function GymList() {
   };
 
   const deleteGym = (id) => {
+    if (!isAdmin) {
+      Alert.alert(
+        "Permission denied",
+        "Only admins can modify gyms."
+      );
+      return;
+    }
+
     Alert.alert(
       "Delete Gym",
       "Are you sure you want to delete this gym?",
@@ -118,6 +138,39 @@ export default function GymList() {
         }
       ]
     );
+  };
+
+  const handleEditGym = (gym) => {
+    if (!isAdmin) {
+      Alert.alert(
+        "Permission denied",
+        "Only admins can modify gyms."
+      );
+      return;
+    }
+
+    navigation.navigate('EditGym', {
+      gym: gym,
+      onSave: handleSaveGym,
+    });
+  };
+
+  const handleSignOut = async () => {
+    console.log("handleSignOut pressed");
+    try {
+      const result = await signOutUser();
+      console.log("signOutUser result:", result);
+
+      if (result.success) {
+        console.log("Navigating to Welcome after sign-out");
+        navigation.replace("Welcome");
+      } else {
+        Alert.alert("Error", result.error || "Failed to sign out.");
+      }
+    } catch (error) {
+      console.error("Sign-out error in handleSignOut:", error);
+      Alert.alert("Error", "Something went wrong during sign-out.");
+    }
   };
 
   const renderStars = (rating) => {
@@ -138,9 +191,41 @@ export default function GymList() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Climbing Gyms</Text>
-        <Text style={styles.subtitle}>{gyms.length} gyms available</Text>
+        <View style={styles.headerTop}>
+          <View>
+            <Text style={styles.title}>Climbing Gyms</Text>
+            <Text style={styles.subtitle}>{gyms.length} gyms available</Text>
+          </View>
+          {isAuthenticated && (
+            <TouchableOpacity 
+              style={styles.signOutButton}
+              onPress={handleSignOut}
+            >
+              <Text style={styles.signOutButtonText}>🚪 Sign Out</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
+
+      {/* Authentication Status Indicator */}
+      {user && (
+        <View style={{ padding: 10, backgroundColor: "#eef", borderRadius: 8, margin: 16, marginBottom: 10 }}>
+          <Text style={{ fontWeight: "600", fontSize: 16 }}>
+            Logged in as: {user.email}
+          </Text>
+          <Text style={{ fontSize: 12, color: "#555" }}>
+            UID: {user.uid}
+          </Text>
+        </View>
+      )}
+
+      {!user && (
+        <View style={{ padding: 10, backgroundColor: "#fee", borderRadius: 8, margin: 16, marginBottom: 10 }}>
+          <Text style={{ fontWeight: "600", fontSize: 16, color: "#c00" }}>
+            Not signed in
+          </Text>
+        </View>
+      )}
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>
@@ -154,14 +239,22 @@ export default function GymList() {
       </View>
       
       {/* Add Gym Button */}
-      <TouchableOpacity 
-        style={styles.addButton} 
-        onPress={() => setShowForm(!showForm)}
-      >
-        <Text style={styles.addButtonText}>
-          {showForm ? '✕ Cancel' : '➕ Add Gym'}
-        </Text>
-      </TouchableOpacity>
+      {isAdmin ? (
+        <TouchableOpacity 
+          style={styles.addButton} 
+          onPress={() => setShowForm(!showForm)}
+        >
+          <Text style={styles.addButtonText}>
+            {showForm ? '✕ Cancel' : '➕ Add Gym'}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <View style={[styles.addButton, { opacity: 0.5 }]}>
+          <Text style={styles.addButtonText}>
+            {isAuthenticated ? "Only admins can add gyms" : "Sign in to add gyms"}
+          </Text>
+        </View>
+      )}
 
       {/* Add Gym Form */}
       {showForm && (
@@ -197,6 +290,7 @@ export default function GymList() {
           <TouchableOpacity 
             style={styles.submitButton} 
             onPress={addGym}
+            disabled={!isAdmin}
           >
             <Text style={styles.submitButtonText}>Add Gym</Text>
           </TouchableOpacity>
@@ -230,24 +324,23 @@ export default function GymList() {
                 <Text style={styles.actionButtonText}>👁️ Details</Text>
               </TouchableOpacity>
               
-              <TouchableOpacity 
-                style={[styles.actionButton, styles.editButton]}
-                onPress={() =>
-                  navigation.navigate('EditGym', {
-                    gym: gym,
-                    onSave: handleSaveGym,
-                  })
-                }
-              >
-                <Text style={styles.actionButtonText}>✏️ Edit</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[styles.actionButton, styles.deleteButton]}
-                onPress={() => deleteGym(gym.id)}
-              >
-                <Text style={styles.actionButtonText}>🗑️ Delete</Text>
-              </TouchableOpacity>
+              {isAdmin && (
+                <>
+                  <TouchableOpacity 
+                    style={[styles.actionButton, styles.editButton]}
+                    onPress={() => handleEditGym(gym)}
+                  >
+                    <Text style={styles.actionButtonText}>✏️ Edit</Text>
+                  </TouchableOpacity>
+                  
+                  <TouchableOpacity 
+                    style={[styles.actionButton, styles.deleteButton]}
+                    onPress={() => deleteGym(gym.id)}
+                  >
+                    <Text style={styles.actionButtonText}>🗑️ Delete</Text>
+                  </TouchableOpacity>
+                </>
+              )}
             </View>
           </View>
         ))}
@@ -274,6 +367,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#e2e8f0',
+  },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  signOutButton: {
+    backgroundColor: '#ef4444',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    shadowColor: '#ef4444',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  signOutButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   title: {
     fontSize: 32,

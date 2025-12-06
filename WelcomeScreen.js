@@ -19,12 +19,29 @@ export default function WelcomeScreen({ navigation }) {
           <Text style={styles.title}>Climbing Portal</Text>
           <Text style={styles.subtitle}>Your climbing companion</Text>
         </View>
-        <TouchableOpacity 
-          style={styles.button}
-          onPress={() => navigation.navigate('GymList')}
-        >
-          <Text style={styles.buttonText}>Get Started</Text>
-        </TouchableOpacity>
+        
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={styles.primaryButton}
+            onPress={() => navigation.navigate('SignIn')}
+          >
+            <Text style={styles.primaryButtonText}>Sign In</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.secondaryButton}
+            onPress={() => navigation.navigate('SignUp')}
+          >
+            <Text style={styles.secondaryButtonText}>Create Account</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.guestButton}
+            onPress={() => navigation.navigate('GymList')}
+          >
+            <Text style={styles.guestButtonText}>Continue as Guest</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -51,40 +68,80 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   textContainer: {
     alignItems: 'center',
-    marginBottom: 25,
+    marginBottom: 60,
   },
   title: {
     fontSize: 56,
-    fontWeight: '600',
+    fontWeight: '800',
     color: 'white',
     textAlign: 'center',
     marginBottom: 12,
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 5,
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 8,
   },
   subtitle: {
     fontSize: 22,
     color: 'white',
     textAlign: 'center',
-    marginBottom: 25,
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 5,
   },
-  button: {
-    backgroundColor: '#007bff',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 4,
+  buttonContainer: {
+    width: '80%',
+    maxWidth: 320,
+    gap: 16,
   },
-  buttonText: {
+  primaryButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#3b82f6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  primaryButtonText: {
     color: 'white',
     fontSize: 18,
+    fontWeight: '700',
+  },
+  secondaryButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  secondaryButtonText: {
+    color: '#1e293b',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  guestButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  guestButtonText: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 16,
     fontWeight: '500',
   },
 }); 

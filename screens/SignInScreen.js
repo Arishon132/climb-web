@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { signInUser, resetPassword } from '../services/authService';
+import { colors } from '../src/theme/colors';
 
 export default function SignInScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -219,7 +220,7 @@ export default function SignInScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: colors.background,
   },
   scrollContent: {
     flexGrow: 1,
@@ -233,12 +234,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: '800',
-    color: '#1e293b',
+    color: colors.secondary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: '#64748b',
+    color: colors.textMuted,
     textAlign: 'center',
   },
   form: {
@@ -250,42 +251,42 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#374151',
+    color: colors.text,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#1f2937',
+    color: colors.text,
   },
   forgotPassword: {
     alignSelf: 'flex-end',
     marginBottom: 24,
   },
   forgotPasswordText: {
-    color: '#3b82f6',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '500',
   },
   button: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     marginBottom: 12,
-    shadowColor: '#3b82f6',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
   },
   buttonDisabled: {
-    backgroundColor: '#9ca3af',
+    backgroundColor: colors.textMuted,
     shadowOpacity: 0.1,
   },
   buttonText: {
@@ -301,23 +302,23 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#e5e7eb',
+    backgroundColor: colors.border,
   },
   dividerText: {
     marginHorizontal: 16,
-    color: '#6b7280',
+    color: colors.textMuted,
     fontSize: 14,
     fontWeight: '500',
   },
   googleButton: {
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.card,
     borderWidth: 1,
-    borderColor: '#d1d5db',
+    borderColor: colors.border,
     shadowColor: '#000000',
     shadowOpacity: 0.1,
   },
   googleButtonText: {
-    color: '#374151',
+    color: colors.text,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -335,11 +336,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    color: '#6b7280',
+    color: colors.textMuted,
     fontSize: 14,
   },
   linkText: {
-    color: '#3b82f6',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '600',
   },

@@ -12,6 +12,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { signUpUser } from '../services/authService';
+import { colors } from '../src/theme/colors';
 
 export default function SignUpScreen({ navigation }) {
   const [firstName, setFirstName] = useState('');
@@ -307,7 +308,7 @@ export default function SignUpScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.background,
   },
   scrollContent: {
     flexGrow: 1,
@@ -321,13 +322,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: '800',
-    color: '#1e293b',
+    color: colors.secondary,
     marginBottom: 8,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#64748b',
+    color: colors.textMuted,
     textAlign: 'center',
     lineHeight: 24,
     paddingHorizontal: 20,
@@ -341,25 +342,25 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#374151',
+    color: colors.text,
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#f9fafb',
-    borderWidth: 2,
-    borderColor: '#e5e7eb',
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#1f2937',
+    color: colors.text,
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f9fafb',
-    borderWidth: 2,
-    borderColor: '#e5e7eb',
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
     borderRadius: 12,
     paddingRight: 12,
   },
@@ -368,31 +369,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 16,
-    color: '#1f2937',
+    color: colors.text,
   },
   showPasswordButton: {
     padding: 8,
   },
   showPasswordText: {
-    color: '#3b82f6',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '600',
   },
   button: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: colors.primary,
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 8,
     marginBottom: 16,
-    shadowColor: '#3b82f6',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 4,
   },
   buttonDisabled: {
-    backgroundColor: '#9ca3af',
+    backgroundColor: colors.textMuted,
     shadowOpacity: 0.1,
   },
   buttonText: {
@@ -402,7 +403,7 @@ const styles = StyleSheet.create({
   },
   termsText: {
     fontSize: 12,
-    color: '#6b7280',
+    color: colors.textMuted,
     textAlign: 'center',
     lineHeight: 18,
     paddingHorizontal: 20,
@@ -414,11 +415,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   footerText: {
-    color: '#6b7280',
+    color: colors.textMuted,
     fontSize: 14,
   },
   linkText: {
-    color: '#3b82f6',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: '600',
   },

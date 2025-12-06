@@ -1,18 +1,49 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { updateGym } from '../services/gymService';
+import { colors } from '../src/theme/colors';
 
 export default function EditGymScreen({ route, navigation }) {
   const { gym, onSave } = route.params; // we'll pass these from GymList
   const [name, setName] = useState(gym.name ?? '');
-  const [location, setLocation] = useState(gym.location ?? '');
-  const [hours, setHours] = useState(gym.hours ?? {});
+  const [city, setCity] = useState(gym.city ?? '');
+  const [address, setAddress] = useState(gym.address ?? '');
+  const [lat, setLat] = useState(gym.coordinates?.lat?.toString() ?? '');
+  const [lng, setLng] = useState(gym.coordinates?.lng?.toString() ?? '');
+  const [hours, setHours] = useState(gym.raw?.hours || gym.hours || {});
 
   const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
-  const handleSave = () => {
-    const updated = { ...gym, name, location, hours };
-    onSave(updated);          // call back into GymList to update state
-    navigation.goBack();      // return to the list
+  const handleSave = async () => {
+    // Parse coordinates
+    const parsedLat = lat.trim() ? parseFloat(lat) : null;
+    const parsedLng = lng.trim() ? parseFloat(lng) : null;
+
+    const coordinates = {
+      lat: parsedLat != null && Number.isFinite(parsedLat) ? parsedLat : null,
+      lng: parsedLng != null && Number.isFinite(parsedLng) ? parsedLng : null,
+    };
+
+    try {
+      // Update in Firestore
+      await updateGym(gym.id, {
+        name,
+        city: city || null,
+        address: address || null,
+        coordinates,
+        hours,
+      });
+
+      // Call the callback for any local state updates
+      if (onSave) {
+        onSave({ ...gym, name, city, address, coordinates, hours });
+      }
+
+      navigation.goBack();
+    } catch (error) {
+      console.error('Error updating gym:', error);
+      Alert.alert('Error', 'Failed to update gym. Please try again.');
+    }
   };
 
   const updateHours = (day, value) => {
@@ -31,11 +62,37 @@ export default function EditGymScreen({ route, navigation }) {
         style={styles.input}
       />
 
-      <Text style={styles.label}>Location</Text>
+      <Text style={styles.label}>City</Text>
       <TextInput
-        value={location}
-        onChangeText={setLocation}
-        placeholder="Location"
+        value={city}
+        onChangeText={setCity}
+        placeholder="City"
+        style={styles.input}
+      />
+
+      <Text style={styles.label}>Address (optional)</Text>
+      <TextInput
+        value={address}
+        onChangeText={setAddress}
+        placeholder="Street address"
+        style={styles.input}
+      />
+
+      <Text style={styles.label}>Latitude (optional)</Text>
+      <TextInput
+        value={lat}
+        onChangeText={setLat}
+        placeholder="e.g., 31.7683"
+        keyboardType="numeric"
+        style={styles.input}
+      />
+
+      <Text style={styles.label}>Longitude (optional)</Text>
+      <TextInput
+        value={lng}
+        onChangeText={setLng}
+        placeholder="e.g., 35.2137"
+        keyboardType="numeric"
         style={styles.input}
       />
 
@@ -63,7 +120,7 @@ const styles = StyleSheet.create({
   container: { 
     padding: 16, 
     gap: 10,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.background,
     flex: 1
   },
   title: { 
@@ -71,21 +128,22 @@ const styles = StyleSheet.create({
     fontWeight: '700', 
     marginBottom: 8, 
     textAlign: 'center',
-    color: '#333'
+    color: colors.secondary
   },
   label: { 
     fontSize: 14, 
     fontWeight: '600', 
     marginTop: 8,
-    color: '#333'
+    color: colors.text
   },
   input: {
     borderWidth: 1, 
-    borderColor: '#ddd', 
+    borderColor: colors.border, 
     borderRadius: 8,
     paddingHorizontal: 12, 
     paddingVertical: 10, 
-    backgroundColor: '#fff'
+    backgroundColor: colors.card,
+    color: colors.text
   },
   hourRow: {
     flexDirection: 'row',
@@ -95,22 +153,23 @@ const styles = StyleSheet.create({
   dayLabel: {
     width: 100,
     fontSize: 14,
-    color: '#333',
+    color: colors.text,
   },
   hourInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.border,
     padding: 8,
     borderRadius: 5,
-    backgroundColor: '#fff'
+    backgroundColor: colors.card,
+    color: colors.text
   },
   btn: {
-    borderRadius: 10, 
+    borderRadius: 8, 
     paddingVertical: 12, 
     alignItems: 'center', 
     marginTop: 16
   },
-  saveBtn: { backgroundColor: '#22c55e' },
+  saveBtn: { backgroundColor: colors.primary },
   btnText: { color: '#fff', fontWeight: '700' },
 });

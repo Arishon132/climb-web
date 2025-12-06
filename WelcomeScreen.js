@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { colors } from './src/theme/colors';
 
 // Get screen dimensions
 const windowWidth = Dimensions.get('window').width;
@@ -98,12 +99,12 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   primaryButton: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: colors.primary,
     paddingVertical: 16,
     paddingHorizontal: 32,
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#3b82f6',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,

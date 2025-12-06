@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "import:gyms:osm": "node scripts/importClimbingGymsFromOSM.js"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.1",
@@ -14,9 +15,12 @@
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/native-stack": "^7.2.0",
     "@react-navigation/stack": "^7.1.1",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
     "expo": "~52.0.28",
     "expo-status-bar": "~2.0.1",
     "firebase": "^12.5.0",
+    "firebase-admin": "^12.6.0",
     "leaflet": "^1.9.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",

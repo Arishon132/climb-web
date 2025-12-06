@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Platform } from 'react-native';
 import WelcomeScreen from './WelcomeScreen';
 import GymList from './GymList';
 import GymDetails from './GymDetails';
@@ -14,8 +15,11 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
+      <NavigationContainer style={{ flex: 1, height: '100vh', overflow: 'hidden' }}>
+        <Stack.Navigator screenOptions={{ 
+          cardStyle: { flex: 1 },
+          contentStyle: Platform.OS === 'web' ? { height: '100%' } : { flex: 1 }
+        }}>
           <Stack.Screen 
             name="Welcome" 
             component={WelcomeScreen} 
@@ -52,6 +56,9 @@ export default function App() {
           <Stack.Screen 
             name="GymList" 
             component={GymList}
+            options={{ 
+              headerShown: false
+            }}
           />
           <Stack.Screen 
             name="GymDetails" 
